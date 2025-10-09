@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Inflatable Museum</title>
+    <style>
+        @font-face {
+            font-family: 'Cambria';
+            src: local('Cambria'), url('https://fonts.cdnfonts.com/css/cambria') format('truetype');
+        }
+
+        body {
+            font-family: 'Cambria', serif;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            overflow: hidden;
+            background-image: url('images/qimoguan.jpeg');
+            background-size: cover;
+            background-position: center;
+            color: #333;
+            position: relative;
+        }
+
+        .white-dots {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+        }
+
+        .white-dot {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background-color: rgba(255, 255, 255, 0.8);
+            border-radius: 50%;
+            animation: float 15s infinite linear;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translate(0, 0);
+            }
+            25% {
+                transform: translate(20px, 15px);
+            }
+            50% {
+                transform: translate(40px, 5px);
+            }
+            75% {
+                transform: translate(20px, 15px);
+            }
+            100% {
+                transform: translate(0, 0);
+            }
+        }
+
+        .text-outline {
+            text-shadow: 
+                -1px -1px 0 white,
+                1px -1px 0 white,
+                -1px 1px 0 white,
+                1px 1px 0 white;
+        }
+
+        .icon {
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .icon:hover {
+            transform: scale(1.2);
+        }
+
+        .back-arrow {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            width: 60px;
+            height: 60px;
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .back-arrow svg {
+            width: 40px;
+            height: 40px;
+        }
+
+        .trophy-icon {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            width: 60px;
+            height: 60px;
+            z-index: 100;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background-color: rgba(255, 255, 255, 0.7);
+            border-radius: 50%;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .trophy-icon svg {
+            width: 40px;
+            height: 40px;
+        }
+
+        .door-icon {
+            position: absolute;
+            width: 60px;
+            height: 80px;
+            z-index: 100;
+            left: 15%;
+            top: 60%;
+        }
+
+        .display-case {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 600px;
+            height: 300px;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="300" viewBox="0 0 600 300"><rect width="600" height="300" fill="%23A67C52"/><path d="M0,0 L600,0 L580,20 L20,20 Z" fill="%238B4513"/><path d="M0,300 L600,300 L580,280 L20,280 Z" fill="%238B4513"/><path d="M0,0 L20,20 L20,280 L0,300 Z" fill="%2365421A"/><path d="M600,0 L580,20 L580,280 L600,300 Z" fill="%2365421A"/><rect x="20" y="20" width="560" height="260" fill="%23D2B48C"/><rect x="30" y="30" width="540" height="240" fill="%23A67C52"/><rect x="40" y="40" width="520" height="220" fill="%238B4513" opacity="0.2"/></svg>');
+            background-size: cover;
+            z-index: 200;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
+        }
+
+        .trophy-container {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            width: 80%;
+            height: 100%;
+            position: relative;
+            padding-right: 50px;
+        }
+
+        .trophy {
+            width: 100px;
+            height: 100px;
+            margin-left: 30px;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .trophy:hover {
+            transform: scale(1.2);
+        }
+
+        .close-case {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            width: 30px;
+            height: 30px;
+            background-color: #8B4513;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .info-bubble {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            width: 500px;
+            background-color: white;
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(0, 0, 0, 0.3);
+            z-index: 300;
+            display: none;
+        }
+
+        .info-bubble:after {
+            content: '';
+            position: absolute;
+            bottom: -15px;
+            left: 50%;
+            transform: translateX(-50%);
+            border-width: 15px 15px 0;
+            border-style: solid;
+            border-color: white transparent transparent;
+        }
+
+        .close-bubble {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            width: 25px;
+            height: 25px;
+            background-color: #ccc;
+            color: white;
+            border: none;
+            border-radius: 50%;
+            cursor: pointer;
+            font-weight: bold;
+        }
+
+        .title {
+            position: absolute;
+            top: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            color: #333;
+            font-size: 2.5em;
+            font-weight: bold;
+            text-align: center;
+            background-color: rgba(255, 255, 255, 0.7);
+            padding: 10px 30px;
+            border-radius: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="white-dots" id="whiteDots"></div>
+    
+    <div class="title text-outline">Inflatable Museum</div>
+    
+    <div class="back-arrow icon">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M20 12H4M4 12L10 6M4 12L10 18" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+        </svg>
+    </div>
+    
+    <div class="trophy-icon icon">
+        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <path d="M19 5H5V12C5 15.866 8.13401 19 12 19C15.866 19 19 15.866 19 12V5Z" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M12 19V23M8 23H16M7.5 5L7 2H17L16.5 5" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+            <path d="M12 15C14.2091 15 16 13.2091 16 11C16 8.79086 14.2091 7 12 7C9.79086 7 8 8.79086 8 11C8 13.2091 9.79086 15 12 15Z" fill="#FFD700"/>
+        </svg>
+    </div>
+    
+    <div class="door-icon icon">
+        <svg viewBox="0 0 60 80" fill="none" xmlns="http://www.w3.org/2000/svg">
+            <rect x="5" y="5" width="50" height="70" rx="3" fill="#8B4513" stroke="#5D2906" stroke-width="2"/>
+            <circle cx="45" cy="40" r="3" fill="#5D2906"/>
+            <path d="M5 15H55M5 25H55M5 35H55M5 45H55M5 55H55M5 65H55" stroke="#5D2906" stroke-width="1" stroke-linecap="round"/>
+        </svg>
+    </div>
+    
+    <div class="display-case" id="displayCase">
+        <button class="close-case" id="closeCase">X</button>
+        <div class="trophy-container">
+            <div class="trophy" id="trophy1">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 17C15.866 17 19 13.866 19 10V5H5V10C5 13.866 8.13401 17 12 17Z" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 17V20M8 20H16M7.5 5L7 2H17L16.5 5" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 13C13.6569 13 15 11.6569 15 10C15 8.34315 13.6569 7 12 7C10.3431 7 9 8.34315 9 10C9 11.6569 10.3431 13 12 13Z" fill="#FFD700"/>
+                </svg>
+            </div>
+            <div class="trophy" id="trophy2">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 17C15.866 17 19 13.866 19 10V5H5V10C5 13.866 8.13401 17 12 17Z" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 17V20M8 20H16M7.5 5L7 2H17L16.5 5" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 13C13.6569 13 15 11.6569 15 10C15 8.34315 13.6569 7 12 7C10.3431 7 9 8.34315 9 10C9 11.6569 10.3431 13 12 13Z" fill="#FFD700"/>
+                </svg>
+            </div>
+            <div class="trophy" id="trophy3">
+                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M12 17C15.866 17 19 13.866 19 10V5H5V10C5 13.866 8.13401 17 12 17Z" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 17V20M8 20H16M7.5 5L7 2H17L16.5 5" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                    <path d="M12 13C13.6569 13 15 11.6569 15 10C15 8.34315 13.6569 7 12 7C10.3431 7 9 8.34315 9 10C9 11.6569 10.3431 13 12 13Z" fill="#FFD700"/>
+                    <path d="M9 10L12 7L15 10" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
+                </svg>
+            </div>
+        </div>
+    </div>
+    
+    <div class="info-bubble" id="infoBubble">
+        <button class="close-bubble" id="closeBubble">X</button>
+        <div id="bubbleContent"></div>
+    </div>
+
+    <script>
+        // Create floating white dots
+        const whiteDotsContainer = document.getElementById('whiteDots');
+        for (let i = 0; i < 30; i++) {
+            const dot = document.createElement('div');
+            dot.className = 'white-dot';
+            dot.style.left = `${Math.random() * 100}%`;
+            dot.style.top = `${Math.random() * 100}%`;
+            dot.style.animationDuration = `${10 + Math.random() * 10}s`;
+            whiteDotsContainer.appendChild(dot);
+        }
+
+        // Back arrow functionality
+        document.querySelector('.back-arrow').addEventListener('click', function() {
+            window.location.href = 'https://lovermissing.github.io/West/';
+        });
+
+        // Trophy icon functionality
+        document.querySelector('.trophy-icon').addEventListener('click', function() {
+            document.getElementById('displayCase').style.display = 'flex';
+        });
+
+        // Close display case
+        document.getElementById('closeCase').addEventListener('click', function() {
+            document.getElementById('displayCase').style.display = 'none';
+        });
+
+        // Trophy click functionality
+        document.getElementById('trophy1').addEventListener('click', function() {
+            document.getElementById('bubbleContent').innerHTML = `
+                <p>Between 2024 and 2025, our school's athletes achieved outstanding results in various provincial competitions:</p>
+                <p>In the 2024 Anhui Student Sports League, the men's doubles team won the championship, the men's singles player won the runner-up, and the mixed doubles team won the bronze medal.</p>
+                <p>In the 2025 competition, the men's team defended their championship title, the men's singles player won the runner-up again, the women's singles player ranked fourth, and the mixed doubles team ranked fifth.</p>
+                <p>In the same year, at the 13th Anhui Provincial Games, the men's team (ordinary group) won the championship, and the men's singles players won second and third places respectively.</p>
+                <p>These achievements fully demonstrate the dual breakthroughs in team cooperation and individual competitive strength.</p>
+            `;
+            document.getElementById('infoBubble').style.display = 'block';
+        });
+
+        document.getElementById('trophy2').addEventListener('click', function() {
+            document.getElementById('bubbleContent').innerHTML = `
+                <p>Since the 1980s, China has redefined global badminton standards, securing an unprecedented 11 Thomas Cups, 16 Uber Cups, and 7 Sudirman Cups – a testament to their unmatched team supremacy. The Olympic stage witnessed legendary achievements like Lin Dan's double Grand Slam (2008/2012) and Zhang Ning's back-to-back golds (2004/2008), while modern stars such as Liang Weikang/Wang Chang (men's doubles) and Chen Yufei (women's singles) continue this legacy.</p>
+                <p>The 2025 season marked new heights: a World Championship sweep with 3 golds, and the China Open's 9 titles in four years. Beyond medals, China's badminton boom is evident in its 10-fold market growth (now $4.5B) and grassroots popularity, with 400 million players nationwide. From Lin Dan's era to today's "Twin Wang" phenomenon, China's blend of technical mastery and systematic development ensures its enduring throne in the sport.</p>
+            `;
+            document.getElementById('infoBubble').style.display = 'block';
+        });
+
+        document.getElementById('trophy3').addEventListener('click', function() {
+            document.getElementById('bubbleContent').innerHTML = `
+                <p>The Chinese women's volleyball team is one of the most dominant teams in international volleyball, having won a total of ten World Cup, World Championship and Olympic championships (1981-2019), including two Olympic three consecutive championships (1984, 2004, 2016). They are famous for their "fast and changeable" tactics, creating techniques such as back flying and cap blocking, and promoting the modification of international rules. Classic battles such as the 2016 Rio Olympics reversal of Brazil and the 2024 World League's two-set comeback victory over Turkey showed the "women's volleyball spirit" of never giving up. The achievements of the Chinese women's volleyball team are not only medals, but also a global benchmark for technological innovation and team resilience.</p>
+            `;
+            document.getElementById('infoBubble').style.display = 'block';
+        });
+
+        // Close info bubble
+        document.getElementById('closeBubble').addEventListener('click', function() {
+            document.getElementById('infoBubble').style.display = 'none';
+        });
+
+        // Door icon functionality (placeholder for now)
+        document.querySelector('.door-icon').addEventListener('click', function() {
+            alert('Door functionality will be implemented when the next page is designed.');
+        });
+    </script>
+</body>
+</html>
