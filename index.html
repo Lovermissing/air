@@ -65,53 +65,40 @@
                 1px 1px 0 white;
         }
 
-        .icon {
+        .icon-container {
+            position: fixed;
+            width: 70px;
+            height: 70px;
+            border-radius: 50%;
+            background-color: rgba(255, 255, 255, 0.7);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
             transition: all 0.3s ease;
+            z-index: 100;
+        }
+
+        .icon-container:hover {
+            transform: scale(1.2);
+            background-color: rgba(255, 255, 255, 0.9);
+        }
+
+        .icon {
+            width: 50px;
+            height: 50px;
+            transition: transform 0.3s ease;
             cursor: pointer;
         }
 
-        .icon:hover {
-            transform: scale(1.2);
-        }
-
-        .back-arrow {
-            position: fixed;
+        .back-arrow-container {
             bottom: 20px;
             left: 20px;
-            width: 60px;
-            height: 60px;
-            z-index: 100;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: rgba(255, 255, 255, 0.7);
-            border-radius: 50%;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
         }
 
-        .back-arrow svg {
-            width: 40px;
-            height: 40px;
-        }
-
-        .trophy-icon {
-            position: fixed;
+        .trophy-icon-container {
             bottom: 20px;
             right: 20px;
-            width: 60px;
-            height: 60px;
-            z-index: 100;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            background-color: rgba(255, 255, 255, 0.7);
-            border-radius: 50%;
-            box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .trophy-icon svg {
-            width: 40px;
-            height: 40px;
         }
 
         .door-icon {
@@ -120,7 +107,13 @@
             height: 80px;
             z-index: 100;
             left: 10%;
-            top: 70%;
+            top: 65%;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+
+        .door-icon:hover {
+            transform: scale(1.1);
         }
 
         .display-case {
@@ -143,24 +136,17 @@
 
         .trophy-container {
             display: flex;
-            justify-content: center;
-            align-items: center;
+            justify-content: space-around;
             width: 100%;
-            height: 100%;
-            gap: 40px;
+            padding: 20px;
         }
 
         .trophy {
-            width: 120px;
-            height: 120px;
+            width: 100px;
+            height: 100px;
+            margin: 0 20px;
             transition: transform 0.3s ease;
             cursor: pointer;
-        }
-
-        .trophy svg {
-            width: 100%;
-            height: 100%;
-            filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.5));
         }
 
         .trophy:hover {
@@ -186,7 +172,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 600px;
+            width: 500px;
             background-color: white;
             padding: 20px;
             border-radius: 10px;
@@ -234,27 +220,81 @@
             border-radius: 10px;
         }
 
-        .info-content {
-            display: flex;
+        /* Immersive Experience Styles */
+        .immersive-experience {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            z-index: 400;
+            display: none;
+            flex-direction: column;
+            justify-content: center;
             align-items: center;
         }
 
-        .info-text {
-            flex: 1;
+        .immersive-message {
+            color: white;
+            font-size: 3rem;
+            text-align: center;
+            opacity: 0;
+            transition: opacity 1s ease-in-out;
+            position: absolute;
+            text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
 
-        .info-image {
-            width: 200px;
-            height: 200px;
-            margin-right: 20px;
-            background-size: cover;
-            background-position: center;
-            border-radius: 5px;
+        .video-container {
+            width: 80%;
+            height: 80%;
+            max-width: 1000px;
+            max-height: 600px;
+            display: none;
+            position: relative;
+            background-color: black;
+            border-radius: 15px;
+            overflow: hidden;
+            box-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
+            border: 2px solid rgba(255, 255, 255, 0.2);
         }
 
-        .info-bg {
-            background-size: cover;
-            background-position: center;
+        .video-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+        }
+
+        .immersive-back {
+            position: absolute;
+            bottom: 30px;
+            left: 30px;
+            width: 120px;
+            height: 50px;
+            background: linear-gradient(135deg, #FFF, #EEE);
+            border: none;
+            border-radius: 25px;
+            font-family: 'Cambria', serif;
+            font-size: 1.2rem;
+            color: #333;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 200;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+        }
+
+        .immersive-back:hover {
+            background: linear-gradient(135deg, #FFF, #DDD);
+            transform: translateY(-3px);
+            box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+        }
+
+        .immersive-back:active {
+            transform: translateY(1px);
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
     </style>
 </head>
@@ -263,21 +303,21 @@
     
     <div class="title text-outline">Air Dome</div>
     
-    <div class="back-arrow icon">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <div class="icon-container back-arrow-container">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M20 12H4M4 12L10 6M4 12L10 18" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
         </svg>
     </div>
     
-    <div class="trophy-icon icon">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+    <div class="icon-container trophy-icon-container">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
             <path d="M19 5H5V12C5 15.866 8.13401 19 12 19C15.866 19 19 15.866 19 12V5Z" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M12 19V23M8 23H16M7.5 5L7 2H17L16.5 5" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
             <path d="M12 15C14.2091 15 16 13.2091 16 11C16 8.79086 14.2091 7 12 7C9.79086 7 8 8.79086 8 11C8 13.2091 9.79086 15 12 15Z" fill="#FFD700"/>
         </svg>
     </div>
     
-    <div class="door-icon icon">
+    <div class="door-icon">
         <svg viewBox="0 0 60 80" fill="none" xmlns="http://www.w3.org/2000/svg">
             <rect x="5" y="5" width="50" height="70" rx="3" fill="#8B4513" stroke="#5D2906" stroke-width="2"/>
             <circle cx="45" cy="40" r="3" fill="#5D2906"/>
@@ -314,8 +354,19 @@
     
     <div class="info-bubble" id="infoBubble">
         <button class="close-bubble" id="closeBubble">X</button>
-        <div class="info-content" id="infoContent">
-            <div class="info-text" id="bubbleContent"></div>
+        <div id="bubbleContent"></div>
+    </div>
+
+    <div class="immersive-experience" id="immersiveExperience">
+        <div class="immersive-message" id="message1">Are You Ready?</div>
+        <div class="immersive-message" id="message2">Let's Experience the Magic of Badminton!</div>
+        <div class="immersive-message" id="message3">3</div>
+        <div class="immersive-message" id="message4">2</div>
+        <div class="immersive-message" id="message5">1</div>
+        
+        <div class="video-container" id="videoContainer">
+            <iframe src="" id="videoFrame" allowfullscreen></iframe>
+            <button class="immersive-back" id="immersiveBack">BACK</button>
         </div>
     </div>
 
@@ -332,12 +383,12 @@
         }
 
         // Back arrow functionality
-        document.querySelector('.back-arrow').addEventListener('click', function() {
+        document.querySelector('.back-arrow-container').addEventListener('click', function() {
             window.location.href = 'https://lovermissing.github.io/West/';
         });
 
         // Trophy icon functionality
-        document.querySelector('.trophy-icon').addEventListener('click', function() {
+        document.querySelector('.trophy-icon-container').addEventListener('click', function() {
             document.getElementById('displayCase').style.display = 'flex';
         });
 
@@ -348,43 +399,28 @@
 
         // Trophy click functionality
         document.getElementById('trophy1').addEventListener('click', function() {
-            const content = document.getElementById('infoContent');
-            content.innerHTML = `
-                <div class="info-text">
-                    <p>Between 2024 and 2025, our school's athletes achieved outstanding results in various provincial competitions:</p>
-                    <p>In the 2024 Anhui Student Sports League, the men's doubles team won the championship, the men's singles player won the runner-up, and the mixed doubles team won the bronze medal.</p>
-                    <p>In the 2025 competition, the men's team defended their championship title, the men's singles player won the runner-up again, the women's singles player ranked fourth, and the mixed doubles team ranked fifth.</p>
-                    <p>In the same year, at the 13th Anhui Provincial Games, the men's team (ordinary group) won the championship, and the men's singles players won second and third places respectively.</p>
-                    <p>These achievements fully demonstrate the dual breakthroughs in team cooperation and individual competitive strength.</p>
-                </div>
+            document.getElementById('bubbleContent').innerHTML = `
+                <p>Between 2024 and 2025, our school's athletes achieved outstanding results in various provincial competitions:</p>
+                <p>In the 2024 Anhui Student Sports League, the men's doubles team won the championship, the men's singles player won the runner-up, and the mixed doubles team won the bronze medal.</p>
+                <p>In the 2025 competition, the men's team defended their championship title, the men's singles player won the runner-up again, the women's singles player ranked fourth, and the mixed doubles team ranked fifth.</p>
+                <p>In the same year, at the 13th Anhui Provincial Games, the men's team (ordinary group) won the championship, and the men's singles players won second and third places respectively.</p>
+                <p>These achievements fully demonstrate the dual breakthroughs in team cooperation and individual competitive strength.</p>
             `;
-            document.getElementById('infoBubble').style.backgroundImage = 'url("images/ustc.jpg")';
-            document.getElementById('infoBubble').style.backgroundSize = 'cover';
             document.getElementById('infoBubble').style.display = 'block';
         });
 
         document.getElementById('trophy2').addEventListener('click', function() {
-            const content = document.getElementById('infoContent');
-            content.innerHTML = `
-                <div class="info-image" style="background-image: url('images/zg.jpg')"></div>
-                <div class="info-text">
-                    <p>Since the 1980s, China has redefined global badminton standards, securing an unprecedented 11 Thomas Cups, 16 Uber Cups, and 7 Sudirman Cups – a testament to their unmatched team supremacy. The Olympic stage witnessed legendary achievements like Lin Dan's double Grand Slam (2008/2012) and Zhang Ning's back-to-back golds (2004/2008), while modern stars such as Liang Weikang/Wang Chang (men's doubles) and Chen Yufei (women's singles) continue this legacy.</p>
-                    <p>The 2025 season marked new heights: a World Championship sweep with 3 golds, and the China Open's 9 titles in four years. Beyond medals, China's badminton boom is evident in its 10-fold market growth (now $4.5B) and grassroots popularity, with 400 million players nationwide. From Lin Dan's era to today's "Twin Wang" phenomenon, China's blend of technical mastery and systematic development ensures its enduring throne in the sport.</p>
-                </div>
+            document.getElementById('bubbleContent').innerHTML = `
+                <p>Since the 1980s, China has redefined global badminton standards, securing an unprecedented 11 Thomas Cups, 16 Uber Cups, and 7 Sudirman Cups – a testament to their unmatched team supremacy. The Olympic stage witnessed legendary achievements like Lin Dan's double Grand Slam (2008/2012) and Zhang Ning's back-to-back golds (2004/2008), while modern stars such as Liang Weikang/Wang Chang (men's doubles) and Chen Yufei (women's singles) continue this legacy.</p>
+                <p>The 2025 season marked new heights: a World Championship sweep with 3 golds, and the China Open's 9 titles in four years. Beyond medals, China's badminton boom is evident in its 10-fold market growth (now $4.5B) and grassroots popularity, with 400 million players nationwide. From Lin Dan's era to today's "Twin Wang" phenomenon, China's blend of technical mastery and systematic development ensures its enduring throne in the sport.</p>
             `;
-            document.getElementById('infoBubble').style.backgroundImage = 'none';
             document.getElementById('infoBubble').style.display = 'block';
         });
 
         document.getElementById('trophy3').addEventListener('click', function() {
-            const content = document.getElementById('infoContent');
-            content.innerHTML = `
-                <div class="info-image" style="background-image: url('images/ag1.jpeg')"></div>
-                <div class="info-text">
-                    <p>The Chinese women's volleyball team is one of the most dominant teams in international volleyball, having won a total of ten World Cup, World Championship and Olympic championships (1981-2019), including two Olympic three consecutive championships (1984, 2004, 2016). They are famous for their "fast and changeable" tactics, creating techniques such as back flying and cap blocking, and promoting the modification of international rules. Classic battles such as the 2016 Rio Olympics reversal of Brazil and the 2024 World League's two-set comeback victory over Turkey showed the "women's volleyball spirit" of never giving up. The achievements of the Chinese women's volleyball team are not only medals, but also a global benchmark for technological innovation and team resilience.</p>
-                </div>
+            document.getElementById('bubbleContent').innerHTML = `
+                <p>The Chinese women's volleyball team is one of the most dominant teams in international volleyball, having won a total of ten World Cup, World Championship and Olympic championships (1981-2019), including two Olympic three consecutive championships (1984, 2004, 2016). They are famous for their "fast and changeable" tactics, creating techniques such as back flying and cap blocking, and promoting the modification of international rules. Classic battles such as the 2016 Rio Olympics reversal of Brazil and the 2024 World League's two-set comeback victory over Turkey showed the "women's volleyball spirit" of never giving up. The achievements of the Chinese women's volleyball team are not only medals, but also a global benchmark for technological innovation and team resilience.</p>
             `;
-            document.getElementById('infoBubble').style.backgroundImage = 'none';
             document.getElementById('infoBubble').style.display = 'block';
         });
 
@@ -393,9 +429,68 @@
             document.getElementById('infoBubble').style.display = 'none';
         });
 
-        // Door icon functionality (placeholder for now)
+        // Door icon functionality - launches immersive experience
         document.querySelector('.door-icon').addEventListener('click', function() {
-            alert('Door functionality will be implemented when the next page is designed.');
+            startImmersiveExperience();
+        });
+
+        // Immersive Experience Functions
+        function startImmersiveExperience() {
+            const experience = document.getElementById('immersiveExperience');
+            const msg1 = document.getElementById('message1');
+            const msg2 = document.getElementById('message2');
+            const msg3 = document.getElementById('message3');
+            const msg4 = document.getElementById('message4');
+            const msg5 = document.getElementById('message5');
+            const videoContainer = document.getElementById('videoContainer');
+            
+            experience.style.display = 'flex';
+            
+            // Sequence of messages with delays
+            setTimeout(() => {
+                msg1.style.opacity = 1;
+                setTimeout(() => {
+                    msg1.style.opacity = 0;
+                    setTimeout(() => {
+                        msg2.style.opacity = 1;
+                        setTimeout(() => {
+                            msg2.style.opacity = 0;
+                            setTimeout(() => {
+                                msg3.style.opacity = 1;
+                                setTimeout(() => {
+                                    msg3.style.opacity = 0;
+                                    setTimeout(() => {
+                                        msg4.style.opacity = 1;
+                                        setTimeout(() => {
+                                            msg4.style.opacity = 0;
+                                            setTimeout(() => {
+                                                msg5.style.opacity = 1;
+                                                setTimeout(() => {
+                                                    msg5.style.opacity = 0;
+                                                    setTimeout(() => {
+                                                        videoContainer.style.display = 'block';
+                                                        document.getElementById('videoFrame').src = 'https://www.bilibili.com/video/BV1SP411u76s?spm_id_from=333.788.recommend_more_video.0&vd_source=9f2e7f7c520e5461bf6db8ad014f9c0e';
+                                                    }, 1000);
+                                                }, 1000);
+                                            }, 1000);
+                                        }, 1000);
+                                    }, 1000);
+                                }, 1000);
+                            }, 1000);
+                        }, 3000);
+                    }, 1000);
+                }, 3000);
+            }, 1000);
+        }
+
+        // Back button functionality
+        document.getElementById('immersiveBack').addEventListener('click', function() {
+            const experience = document.getElementById('immersiveExperience');
+            const videoContainer = document.getElementById('videoContainer');
+            
+            videoContainer.style.display = 'none';
+            document.getElementById('videoFrame').src = '';
+            experience.style.display = 'none';
         });
     </script>
 </body>
