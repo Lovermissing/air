@@ -89,11 +89,6 @@
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
         }
 
-        .back-arrow svg {
-            width: 40px;
-            height: 40px;
-        }
-
         .trophy-icon {
             position: fixed;
             bottom: 20px;
@@ -107,11 +102,6 @@
             background-color: rgba(255, 255, 255, 0.7);
             border-radius: 50%;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
-        }
-
-        .trophy-icon svg {
-            width: 40px;
-            height: 40px;
         }
 
         .door-icon {
@@ -143,11 +133,9 @@
 
         .trophy-container {
             display: flex;
-            justify-content: center;
-            align-items: center;
+            justify-content: space-around;
             width: 100%;
-            height: 100%;
-            gap: 40px;
+            padding: 20px;
         }
 
         .trophy {
@@ -273,10 +261,10 @@
         }
 
         .video-container {
-            width: 80%;
-            height: 80%;
-            max-width: 1000px;
-            max-height: 600px;
+            width: 90%;
+            height: 90%;
+            max-width: 1200px;
+            max-height: 675px;
             display: none;
             position: relative;
             background-color: black;
@@ -284,6 +272,12 @@
             overflow: hidden;
             box-shadow: 0 0 30px rgba(255, 255, 255, 0.4);
             border: 2px solid rgba(255, 255, 255, 0.2);
+        }
+
+        .video-container iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
         }
 
         .immersive-back {
@@ -300,14 +294,12 @@
             font-weight: bold;
             color: #333;
             cursor: pointer;
-            transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            transition: all 0.3s ease;
             z-index: 200;
             display: flex;
             justify-content: center;
             align-items: center;
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-            text-transform: uppercase;
-            letter-spacing: 1px;
         }
 
         .immersive-back:hover {
@@ -518,6 +510,12 @@
                                                     setTimeout(() => {
                                                         videoContainer.style.display = 'block';
                                                         document.getElementById('videoFrame').src = 'https://www.bilibili.com/video/BV1SP411u76s?spm_id_from=333.788.recommend_more_video.0&vd_source=9f2e7f7c520e5461bf6db8ad014f9c0e';
+                                                        
+                                                        // Ensure iframe fills container
+                                                        const iframe = document.getElementById('videoFrame');
+                                                        iframe.style.width = '100%';
+                                                        iframe.style.height = '100%';
+                                                        iframe.style.border = 'none';
                                                     }, 1000);
                                                 }, 1000);
                                             }, 1000);
@@ -525,10 +523,10 @@
                                     }, 1000);
                                 }, 1000);
                             }, 1000);
-                        }, 1000);
-                    }, 3000);
-                }, 1000);
-            }, 3000);
+                        }, 3000);
+                    }, 1000);
+                }, 3000);
+            }, 1000);
         }
 
         // Back button functionality
