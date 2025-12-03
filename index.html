@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh-CN">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -102,6 +102,14 @@
             background-color: rgba(255, 255, 255, 0.7);
             border-radius: 50%;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+            overflow: hidden;
+        }
+
+        .trophy-icon img {
+            width: 80%;
+            height: 80%;
+            object-fit: contain;
+            filter: drop-shadow(0 0 2px rgba(0, 0, 0, 0.5));
         }
 
         .door-icon {
@@ -143,6 +151,17 @@
             height: 120px;
             transition: transform 0.3s ease;
             cursor: pointer;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+        }
+
+        .trophy img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.7));
         }
 
         .trophy:hover {
@@ -247,7 +266,7 @@
             display: none;
             flex-direction: column;
             justify-content: center;
-            align-items: center;
+ readiness: center;
         }
 
         .immersive-message {
@@ -326,11 +345,7 @@
     </div>
     
     <div class="trophy-icon icon">
-        <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <path d="M19 5H5V12C5 15.866 8.13401 19 12 19C15.866 19 19 15.866 19 12V5Z" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M12 19V23M8 23H16M7.5 5L7 2H17L16.5 5" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-            <path d="M12 15C14.2091 15 16 13.2091 16 11C16 8.79086 14.2091 7 12 7C9.79086 7 8 8.79086 8 11C8 13.2091 9.79086 15 12 15Z" fill="#FFD700"/>
-        </svg>
+        <img src="images/奖杯1.png" alt="奖杯图标">
     </div>
     
     <div class="door-icon icon">
@@ -345,25 +360,13 @@
         <button class="close-case" id="closeCase">X</button>
         <div class="trophy-container">
             <div class="trophy" id="trophy1">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 17C15.866 17 19 13.866 19 10V5H5V10C5 13.866 8.13401 17 12 17Z" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M12 17V20M8 20H16M7.5 5L7 2H17L16.5 5" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M12 13C13.6569 13 15 11.6569 15 10C15 8.34315 13.6569 7 12 7C10.3431 7 9 8.34315 9 10C9 11.6569 10.3431 13 12 13Z" fill="#FFD700"/>
-                </svg>
+                <img src="images/奖杯2.png" alt="奖杯1">
             </div>
             <div class="trophy" id="trophy2">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 17C15.866 17 19 13.866 19 10V5H5V10C5 13.866 8.13401 17 12 17Z" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M12 17V20M8 20H16M7.5 5L7 2H17L16.5 5" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M12 13C13.6569 13 15 11.6569 15 10C15 8.34315 13.6569 7 12 7C10.3431 7 9 8.34315 9 10C9 11.6569 10.3431 13 12 13Z" fill="#FFD700"/>
-                </svg>
+                <img src="images/奖杯2.png" alt="奖杯2">
             </div>
             <div class="trophy" id="trophy3">
-                <svg viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-                    <path d="M12 17C15.866 17 19 13.866 19 10V5H5V10C5 13.866 8.13401 17 12 17Z" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M12 17V20M8 20H16M7.5 5L7 2H17L16.5 5" stroke="#FFD700" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/>
-                    <path d="M12 13C13.6569 13 15 11.6569 15 10C15 8.34315 13.6569 7 12 7C10.3431 7 9 8.34315 9 10C9 11.6569 10.3431 13 12 13Z" fill="#FFD700"/>
-                </svg>
+                <img src="images/奖杯2.png" alt="奖杯3">
             </div>
         </div>
     </div>
@@ -422,11 +425,11 @@
             document.getElementById('bubbleContent').innerHTML = `
                 <div class="info-content">
                     <div class="info-text">
-                        <p>Between 2024 and 2025, our school's athletes achieved outstanding results in various provincial competitions:</p>
-                        <p>In the 2024 Anhui Student Sports League, the men's doubles team won the championship, the men's singles player won the runner-up, and the mixed doubles team won the bronze medal.</p>
-                        <p>In the 2025 competition, the men's team defended their championship title, the men's singles player won the runner-up again, the women's singles player ranked fourth, and the mixed doubles team ranked fifth.</p>
-                        <p>In the same year, at the 13th Anhui Provincial Games, the men's team (ordinary group) won the championship, and the men's singles players won second and third places respectively.</p>
-                        <p>These achievements fully demonstrate the dual breakthroughs in team cooperation and individual competitive strength.</p>
+                        <p>在2024年至2025年期间，我校运动员在各项省级比赛中取得了优异成绩：</p>
+                        <p>在2024年安徽省学生体育联赛中，男双组合获得冠军，男单选手获得亚军，混双组合获得季军。</p>
+                        <p>在2025年的比赛中，男队卫冕冠军，男单选手再次获得亚军，女单选手获得第四名，混双组合获得第五名。</p>
+                        <p>同年，在第十三届安徽省运动会中，男队（普通组）获得冠军，男单选手分别获得第二名和第三名。</p>
+                        <p>这些成绩充分展现了团队合作与个人竞技实力的双重突破。</p>
                     </div>
                 </div>
             `;
@@ -441,8 +444,8 @@
                 <div class="info-content">
                     <div class="info-image" style="background-image: url('images/zg.jpg')"></div>
                     <div class="info-text">
-                        <p>Since the 1980s, China has redefined global badminton standards, securing an unprecedented 11 Thomas Cups, 16 Uber Cups, and 7 Sudirman Cups – a testament to their unmatched team supremacy. The Olympic stage witnessed legendary achievements like Lin Dan's double Grand Slam (2008/2012) and Zhang Ning's back-to-back golds (2004/2008), while modern stars such as Liang Weikang/Wang Chang (men's doubles) and Chen Yufei (women's singles) continue this legacy.</p>
-                        <p>The 2025 season marked new heights: a World Championship sweep with 3 golds, and the China Open's 9 titles in four years. Beyond medals, China's badminton boom is evident in its 10-fold market growth (now $4.5B) and grassroots popularity, with 400 million players nationwide. From Lin Dan's era to today's "Twin Wang" phenomenon, China's blend of technical mastery and systematic development ensures its enduring throne in the sport.</p>
+                        <p>自20世纪80年代以来，中国重新定义了全球羽毛球标准，获得了前所未有的11次汤姆斯杯、16次尤伯杯和7次苏迪曼杯——这是他们无与伦比的团队优势的证明。奥运舞台上见证了林丹的双圈大满贯（2008/2012）和张宁的背靠背金牌（2004/2008）等传奇成就，而梁伟铿/王昶（男双）和陈雨菲（女单）等现代球星继续延续这一传统。</p>
+                        <p>2025赛季达到了新的高度：世锦赛横扫3枚金牌，中国公开赛四年内获得9个冠军。除了奖牌，中国的羽毛球热潮体现在其10倍的市场增长（现为45亿美元）和草根普及度，全国有4亿参与者。从林丹时代到今天的"双王"现象，中国将技术掌握与系统发展相结合，确保其在羽毛球运动中的持久统治地位。</p>
                     </div>
                 </div>
             `;
@@ -457,7 +460,7 @@
                 <div class="info-content">
                     <div class="info-image" style="background-image: url('images/zg1.jpeg')"></div>
                     <div class="info-text">
-                        <p>The Chinese women's volleyball team is one of the most dominant teams in international volleyball, having won a total of ten World Cup, World Championship and Olympic championships (1981-2019), including two Olympic three consecutive championships (1984, 2004, 2016). They are famous for their "fast and changeable" tactics, creating techniques such as back flying and cap blocking, and promoting the modification of international rules. Classic battles such as the 2016 Rio Olympics reversal of Brazil and the 2024 World League's two-set comeback victory over Turkey showed the "women's volleyball spirit" of never giving up. The achievements of the Chinese women's volleyball team are not only medals, but also a global benchmark for technological innovation and team resilience.</p>
+                        <p>中国女排是国际排球界最具统治力的球队之一，共获得十次世界杯、世锦赛和奥运会冠军（1981-2019），包括两次奥运三连冠（1984、2004、2016）。她们以"快变"战术著称，创造了背飞、盖帽拦网等技术，并推动了国际规则的修改。2016年里约奥运会逆转巴西和2024年世界联赛两局逆转土耳其等经典战役展现了永不放弃的"女排精神"。中国女排的成就不仅是奖牌，更是全球技术创新和团队韧性的标杆。</p>
                     </div>
                 </div>
             `;
