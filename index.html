@@ -3,17 +3,11 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Air Dome - Inflatable Sports Center</title>
+    <title>Air Dome - Trophy Display</title>
     <style>
         @font-face {
             font-family: 'Cambria';
             src: local('Cambria'), url('https://fonts.cdnfonts.com/css/cambria') format('truetype');
-        }
-
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
         }
 
         body {
@@ -140,10 +134,8 @@
             transform: translate(-50%, -50%);
             width: 600px;
             height: 300px;
-            background-image: url('images/奖杯2.png');
-            background-size: contain;
-            background-repeat: no-repeat;
-            background-position: center;
+            background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="600" height="300" viewBox="0 0 600 300"><rect width="600" height="300" fill="%23A67C52"/><path d="M0,0 L600,0 L580,20 L20,20 Z" fill="%238B4513"/><path d="M0,300 L600,300 L580,280 L20,280 Z" fill="%238B4513"/><path d="M0,0 L20,20 L20,280 L0,300 Z" fill="%2365421A"/><path d="M600,0 L580,20 L580,280 L600,300 Z" fill="%2365421A"/><rect x="20" y="20" width="560" height="260" fill="%23D2B48C"/><rect x="30" y="30" width="540" height="240" fill="%23A67C52"/><rect x="40" y="40" width="520" height="220" fill="%238B4513" opacity="0.2"/></svg>');
+            background-size: cover;
             z-index: 200;
             display: none;
             flex-direction: column;
@@ -151,28 +143,52 @@
             align-items: center;
             border-radius: 10px;
             box-shadow: 0 0 20px rgba(0, 0, 0, 0.5);
-            background-color: rgba(0, 0, 0, 0.7);
-            padding: 20px;
         }
 
         .trophy-container {
             display: flex;
             justify-content: space-around;
+            align-items: center;
             width: 100%;
+            height: 100%;
             padding: 20px;
         }
 
         .trophy {
-            width: 100px;
-            height: 100px;
-            margin: 0 20px;
-            transition: transform 0.3s ease;
+            width: 150px;
+            height: 200px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            transition: all 0.3s ease;
             cursor: pointer;
             position: relative;
         }
 
-        .trophy:hover {
-            transform: scale(1.2);
+        .trophy img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            filter: drop-shadow(0 0 5px rgba(255, 215, 0, 0.7));
+            transition: all 0.3s ease;
+        }
+
+        .trophy:hover img {
+            transform: scale(1.3);
+            filter: drop-shadow(0 0 10px rgba(255, 215, 0, 0.9));
+        }
+
+        .trophy:hover::after {
+            content: '';
+            position: absolute;
+            width: 200px;
+            height: 200px;
+            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 5;
+            mix-blend-mode: overlay;
+            opacity: 0.8;
         }
 
         .close-case {
@@ -194,7 +210,7 @@
             top: 50%;
             left: 50%;
             transform: translate(-50%, -50%);
-            width: 500px;
+            width: 600px;
             background-color: white;
             padding: 20px;
             border-radius: 10px;
@@ -287,8 +303,8 @@
         }
 
         .video-container {
-            width: 80%;
-            height: 80%;
+            width: 90%;
+            height: 90%;
             max-width: 1000px;
             max-height: 600px;
             display: none;
@@ -338,50 +354,6 @@
             transform: translateY(1px);
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
-
-        /* Trophy areas for spotlight effect */
-        .trophy-area {
-            position: absolute;
-            width: 33.33%;
-            height: 70%;
-            cursor: pointer;
-            transition: all 0.3s ease;
-            z-index: 5;
-        }
-
-        .trophy-area:hover {
-            background-color: rgba(255, 255, 255, 0.1);
-            border-radius: 10px;
-        }
-
-        #trophy1-area {
-            left: 0;
-            top: 15%;
-        }
-
-        #trophy2-area {
-            left: 33.33%;
-            top: 15%;
-        }
-
-        #trophy3-area {
-            left: 66.66%;
-            top: 15%;
-        }
-
-        /* Spotlight effect */
-        .spotlight {
-            position: absolute;
-            width: 120px;
-            height: 120px;
-            background: radial-gradient(circle, rgba(255,255,255,0.8) 0%, rgba(255,255,255,0) 70%);
-            border-radius: 50%;
-            pointer-events: none;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-            z-index: 10;
-            mix-blend-mode: overlay;
-        }
     </style>
 </head>
 <body>
@@ -396,7 +368,7 @@
     </div>
     
     <div class="trophy-icon icon">
-        <img src="images/奖杯1.png" alt="Trophy Icon">
+        <img src="images/奖杯1.jpg" alt="Trophy Icon">
     </div>
     
     <div class="door-icon icon">
@@ -409,14 +381,16 @@
     
     <div class="display-case" id="displayCase">
         <button class="close-case" id="closeCase">X</button>
-        <div class="trophy-image">
-            <div class="spotlight" id="spotlight1"></div>
-            <div class="spotlight" id="spotlight2"></div>
-            <div class="spotlight" id="spotlight3"></div>
-            
-            <div class="trophy-area" id="trophy1-area"></div>
-            <div class="trophy-area" id="trophy2-area"></div>
-            <div class="trophy-area" id="trophy3-area"></div>
+        <div class="trophy-container">
+            <div class="trophy" id="trophy1">
+                <img src="images/奖杯1.jpg" alt="USTC Trophy">
+            </div>
+            <div class="trophy" id="trophy2">
+                <img src="images/奖杯2.jpg" alt="Badminton Trophy">
+            </div>
+            <div class="trophy" id="trophy3">
+                <img src="images/奖杯3.jpg" alt="Volleyball Trophy">
+            </div>
         </div>
     </div>
     
@@ -466,7 +440,7 @@
         });
 
         // Trophy click functionality
-        document.getElementById('trophy1-area').addEventListener('click', function() {
+        document.getElementById('trophy1').addEventListener('click', function() {
             const bubble = document.getElementById('infoBubble');
             bubble.style.backgroundImage = 'url("images/ustc.jpg")';
             bubble.style.backgroundSize = 'cover';
@@ -485,7 +459,7 @@
             document.getElementById('infoBubble').style.display = 'block';
         });
 
-        document.getElementById('trophy2-area').addEventListener('click', function() {
+        document.getElementById('trophy2').addEventListener('click', function() {
             const bubble = document.getElementById('infoBubble');
             bubble.style.backgroundImage = 'none';
             
@@ -501,7 +475,7 @@
             document.getElementById('infoBubble').style.display = 'block';
         });
 
-        document.getElementById('trophy3-area').addEventListener('click', function() {
+        document.getElementById('trophy3').addEventListener('click', function() {
             const bubble = document.getElementById('infoBubble');
             bubble.style.backgroundImage = 'none';
             
@@ -589,38 +563,6 @@
             videoContainer.style.display = 'none';
             document.getElementById('videoFrame').src = '';
             experience.style.display = 'none';
-        });
-
-        // Spotlight functionality for trophies
-        const trophyAreas = document.querySelectorAll('.trophy-area');
-        const spotlights = document.querySelectorAll('.spotlight');
-        
-        trophyAreas.forEach((area, index) => {
-            area.addEventListener('mouseenter', function(e) {
-                const spotlight = spotlights[index];
-                spotlight.style.opacity = '0.8';
-                
-                // Position spotlight at trophy
-                const rect = area.getBoundingClientRect();
-                const containerRect = document.querySelector('.trophy-image').getBoundingClientRect();
-                
-                spotlight.style.left = `${rect.left - containerRect.left + rect.width/2}px`;
-                spotlight.style.top = `${rect.top - containerRect.top + rect.height/2}px`;
-            });
-            
-            area.addEventListener('mouseleave', function() {
-                const spotlight = spotlights[index];
-                spotlight.style.opacity = '0';
-            });
-            
-            area.addEventListener('mousemove', function(e) {
-                const spotlight = spotlights[index];
-                const rect = area.getBoundingClientRect();
-                const containerRect = document.querySelector('.trophy-image').getBoundingClientRect();
-                
-                spotlight.style.left = `${e.clientX - containerRect.left}px`;
-                spotlight.style.top = `${e.clientY - containerRect.top}px`;
-            });
         });
     </script>
 </body>
