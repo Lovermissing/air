@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Air Dome - Trophy Display</title>
     <style>
+        /* 之前的所有CSS样式保持不变 */
         @font-face {
             font-family: 'Cambria';
             src: local('Cambria'), url('https://fonts.cdnfonts.com/css/cambria') format('truetype');
@@ -355,6 +356,41 @@
             transform: translateY(1px);
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
+
+        /* 加载动画 */
+        .video-loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 100;
+        }
+
+        .loading-spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid #3498db;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .loading-text {
+            color: white;
+            margin-top: 20px;
+            font-size: 1.2rem;
+        }
     </style>
 </head>
 <body>
@@ -408,13 +444,17 @@
         <div class="video-message" id="message5">1</div>
         
         <div class="video-player-container" id="videoPlayerContainer">
-            <video class="video-player" id="videoPlayer" controls>
-               
-                <source src="/West/【高燃杀球卡点】这才是男单的魅力！！！.mp4" type="video/mp4">
-                
-                
+            <!-- 加载动画 -->
+            <div class="video-loading" id="videoLoading">
+                <div class="loading-spinner"></div>
+                <div class="loading-text" id="loadingText">Loading video...</div>
+            </div>
+            
+            <!-- 视频播放器 -->
+            <video class="video-player" id="videoPlayer" controls crossorigin="anonymous" style="display: none;">
                 Your browser does not support the video tag.
             </video>
+            
             <button class="video-back" id="videoBack">BACK</button>
         </div>
     </div>
@@ -504,119 +544,289 @@
 
         // Video Experience Functions
         const videoExperience = document.getElementById('videoExperience');
-        const msg1 = document.getElementById('message1');
-        const msg2 = document.getElementById('message2');
-        const msg3 = document.getElementById('message3');
-        const msg4 = document.getElementById('message4');
-        const msg5 = document.getElementById('message5');
         const videoPlayerContainer = document.getElementById('videoPlayerContainer');
         const videoPlayer = document.getElementById('videoPlayer');
+        const videoLoading = document.getElementById('videoLoading');
+        const loadingText = document.getElementById('loadingText');
+        const videoBack = document.getElementById('videoBack');
 
-        // Door icon functionality - launches video experience
-        document.querySelector('.door-icon').addEventListener('click', function() {
-            startVideoExperience();
-        });
-
-        function startVideoExperience() {
-            videoExperience.style.display = 'flex';
-            
-            // Sequence of messages with delays
-            setTimeout(() => {
-                msg1.style.opacity = 1;
-                setTimeout(() => {
-                    msg1.style.opacity = 0;
-                    setTimeout(() => {
-                        msg2.style.opacity = 1;
-                        setTimeout(() => {
-                            msg2.style.opacity = 0;
-                            setTimeout(() => {
-                                msg3.style.opacity = 1;
-                                setTimeout(() => {
-                                    msg3.style.opacity = 0;
-                                    setTimeout(() => {
-                                        msg4.style.opacity = 1;
-                                        setTimeout(() => {
-                                            msg4.style.opacity = 0;
-                                            setTimeout(() => {
-                                                msg5.style.opacity = 1;
-                                                setTimeout(() => {
-                                                    msg5.style.opacity = 0;
-                                                    setTimeout(() => {
-                                                        videoPlayerContainer.style.display = 'block';
-                                                        // 添加错误处理
-                                                        videoPlayer.play().catch(error => {
-                                                            console.log("Video play error:", error);
-                                                            showVideoError();
-                                                        });
-                                                    }, 1000);
-                                                }, 1000);
-                                            }, 1000);
-                                        }, 1000);
-                                    }, 1000);
-                                }, 1000);
-                            }, 1000);
-                        }, 3000);
-                    }, 1000);
-                }, 3000);
-            }, 1000);
+        // 视频文件名
+        const videoFileName = "【高燃杀球卡点】这才是男单的魅力！！！.mp4";
+        
+        // 显示加载动画
+        function showLoading(text) {
+            videoLoading.style.display = 'flex';
+            loadingText.textContent = text;
         }
-
-        function showVideoError() {
+        
+        // 隐藏加载动画
+        function hideLoading() {
+            videoLoading.style.display = 'none';
+        }
+        
+        // 显示错误
+        function showError(message) {
+            hideLoading();
+            
             const errorDiv = document.createElement('div');
             errorDiv.style.position = 'absolute';
-            errorDiv.style.top = '50%';
-            errorDiv.style.left = '50%';
-            errorDiv.style.transform = 'translate(-50%, -50%)';
-            errorDiv.style.backgroundColor = 'rgba(0,0,0,0.8)';
+            errorDiv.style.top = '0';
+            errorDiv.style.left = '0';
+            errorDiv.style.width = '100%';
+            errorDiv.style.height = '100%';
+            errorDiv.style.backgroundColor = 'rgba(0,0,0,0.9)';
             errorDiv.style.color = 'white';
+            errorDiv.style.display = 'flex';
+            errorDiv.style.flexDirection = 'column';
+            errorDiv.style.justifyContent = 'center';
+            errorDiv.style.alignItems = 'center';
             errorDiv.style.padding = '20px';
-            errorDiv.style.borderRadius = '10px';
             errorDiv.style.textAlign = 'center';
             errorDiv.style.zIndex = '100';
-            errorDiv.style.maxWidth = '80%';
             
             errorDiv.innerHTML = `
-                <h3>Video Playback Issue</h3>
-                <p>This video is stored using Git LFS. Please choose an option:</p>
-                <button class="video-option" style="margin: 5px; padding: 10px; cursor: pointer;" onclick="window.open('https://github.com/lovermissing/West/blob/master/【高燃杀球卡点】这才是男单的魅力！！！.mp4', '_blank')">1. View on GitHub</button>
-                <br>
-                <button class="video-option" style="margin: 5px; padding: 10px; cursor: pointer;" onclick="useExternalVideo()">2. Use Sample Video</button>
-                <br>
-                <button class="video-option" style="margin: 5px; padding: 10px; cursor: pointer;" onclick="retryVideo()">3. Try Again</button>
+                <h3>❌ Video Loading Error</h3>
+                <p>${message}</p>
+                <div style="margin-top: 20px;">
+                    <button onclick="retryVideoLoad()" 
+                            style="padding: 10px 20px; margin: 5px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                        Retry
+                    </button>
+                    <button onclick="useAlternativeSource()" 
+                            style="padding: 10px 20px; margin: 5px; background: #2ecc71; color: white; border: none; border-radius: 5px; cursor: pointer;">
+                        Try Alternative Source
+                    </button>
+                </div>
             `;
             
             videoPlayerContainer.appendChild(errorDiv);
             
-            // 定义按钮功能
-            window.useExternalVideo = function() {
-                videoPlayer.src = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
+            window.retryVideoLoad = function() {
                 errorDiv.remove();
-                videoPlayer.load();
-                videoPlayer.play();
+                loadGitLFSVideo();
             };
             
-            window.retryVideo = function() {
+            window.useAlternativeSource = function() {
                 errorDiv.remove();
-                videoPlayer.load();
+                // 使用备用视频源
+                videoPlayer.src = "badminton-backup.mp4";
+                videoPlayer.style.display = 'block';
                 videoPlayer.play();
             };
         }
-
+        
+        // 获取Git LFS文件的真实URL
+        async function getGitLFSVideoUrl() {
+            showLoading("Connecting to GitHub...");
+            
+            try {
+                // 尝试使用GitHub API获取文件信息
+                const apiUrl = `https://api.github.com/repos/lovermissing/West/contents/${encodeURIComponent(videoFileName)}`;
+                console.log("Fetching from API:", apiUrl);
+                
+                const response = await fetch(apiUrl);
+                
+                if (!response.ok) {
+                    throw new Error(`GitHub API error: ${response.status}`);
+                }
+                
+                const data = await response.json();
+                console.log("GitHub API response:", data);
+                
+                // 检查是否是LFS文件
+                if (data.encoding === 'base64') {
+                    const content = atob(data.content);
+                    
+                    if (content.includes('version https://git-lfs.github.com/spec/v1')) {
+                        // 这是LFS指针文件
+                        showLoading("Fetching Git LFS file...");
+                        
+                        // 方法1: 尝试通过raw.githubusercontent.com（可能不工作）
+                        const rawUrl = `https://raw.githubusercontent.com/lovermissing/West/master/${encodeURIComponent(videoFileName)}`;
+                        console.log("Trying raw URL:", rawUrl);
+                        
+                        // 测试这个URL是否有效
+                        const testResponse = await fetch(rawUrl, { method: 'HEAD' });
+                        if (testResponse.ok) {
+                            return rawUrl;
+                        }
+                        
+                        // 方法2: 尝试通过media.githubusercontent.com
+                        const mediaUrl = `https://media.githubusercontent.com/media/lovermissing/West/master/${encodeURIComponent(videoFileName)}`;
+                        console.log("Trying media URL:", mediaUrl);
+                        
+                        return mediaUrl;
+                    } else {
+                        // 这不是LFS文件，可以直接使用
+                        return data.download_url;
+                    }
+                }
+                
+                // 返回下载URL
+                return data.download_url;
+                
+            } catch (error) {
+                console.error("Error getting Git LFS URL:", error);
+                throw error;
+            }
+        }
+        
+        // 测试URL是否可访问
+        async function testVideoUrl(url) {
+            return new Promise((resolve) => {
+                const xhr = new XMLHttpRequest();
+                xhr.open('HEAD', url);
+                xhr.onload = function() {
+                    resolve(xhr.status === 200);
+                };
+                xhr.onerror = function() {
+                    resolve(false);
+                };
+                xhr.timeout = 10000; // 10秒超时
+                xhr.ontimeout = function() {
+                    resolve(false);
+                };
+                xhr.send();
+            });
+        }
+        
+        // 加载Git LFS视频
+        async function loadGitLFSVideo() {
+            try {
+                // 1. 获取视频URL
+                const videoUrl = await getGitLFSVideoUrl();
+                console.log("Video URL obtained:", videoUrl);
+                
+                // 2. 测试URL
+                showLoading("Testing video source...");
+                const isAccessible = await testVideoUrl(videoUrl);
+                
+                if (!isAccessible) {
+                    throw new Error("Video URL is not accessible");
+                }
+                
+                // 3. 设置视频源
+                showLoading("Loading video...");
+                videoPlayer.src = videoUrl;
+                
+                // 4. 预加载元数据
+                await new Promise((resolve, reject) => {
+                    videoPlayer.addEventListener('loadedmetadata', resolve);
+                    videoPlayer.addEventListener('error', reject);
+                    
+                    // 设置超时
+                    setTimeout(() => reject(new Error("Video loading timeout")), 30000);
+                    
+                    videoPlayer.load();
+                });
+                
+                // 5. 隐藏加载动画，显示播放器
+                hideLoading();
+                videoPlayer.style.display = 'block';
+                
+                // 6. 尝试播放
+                try {
+                    await videoPlayer.play();
+                    console.log("Video playback started");
+                } catch (playError) {
+                    console.log("Autoplay prevented:", playError);
+                    showPlayButton();
+                }
+                
+            } catch (error) {
+                console.error("Error loading Git LFS video:", error);
+                showError(`Failed to load video: ${error.message}`);
+            }
+        }
+        
+        // 显示播放按钮
+        function showPlayButton() {
+            const overlay = document.createElement('div');
+            overlay.style.position = 'absolute';
+            overlay.style.top = '0';
+            overlay.style.left = '0';
+            overlay.style.width = '100%';
+            overlay.style.height = '100%';
+            overlay.style.backgroundColor = 'rgba(0,0,0,0.7)';
+            overlay.style.display = 'flex';
+            overlay.style.flexDirection = 'column';
+            overlay.style.justifyContent = 'center';
+            overlay.style.alignItems = 'center';
+            overlay.style.zIndex = '150';
+            
+            const playButton = document.createElement('button');
+            playButton.innerHTML = '▶';
+            playButton.style.fontSize = '4rem';
+            playButton.style.width = '100px';
+            playButton.style.height = '100px';
+            playButton.style.borderRadius = '50%';
+            playButton.style.border = 'none';
+            playButton.style.background = 'rgba(255,255,255,0.9)';
+            playButton.style.cursor = 'pointer';
+            playButton.style.color = '#333';
+            
+            const message = document.createElement('p');
+            message.textContent = 'Click to play';
+            message.style.color = 'white';
+            message.style.marginTop = '20px';
+            message.style.fontSize = '1.2rem';
+            
+            playButton.addEventListener('click', function() {
+                videoPlayer.play();
+                overlay.remove();
+            });
+            
+            overlay.appendChild(playButton);
+            overlay.appendChild(message);
+            videoPlayerContainer.appendChild(overlay);
+        }
+        
+        // 修改启动视频体验的函数
+        async function startVideoExperience() {
+            // 显示倒计时消息
+            const messages = [
+                document.getElementById('message1'),
+                document.getElementById('message2'),
+                document.getElementById('message3'),
+                document.getElementById('message4'),
+                document.getElementById('message5')
+            ];
+            
+            // 显示视频体验界面
+            videoExperience.style.display = 'flex';
+            
+            // 倒计时动画
+            for (let i = 0; i < messages.length; i++) {
+                messages[i].style.opacity = 1;
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                messages[i].style.opacity = 0;
+            }
+            
+            // 显示视频播放器容器
+            videoPlayerContainer.style.display = 'block';
+            
+            // 开始加载视频
+            await loadGitLFSVideo();
+        }
+        
+        // Door icon functionality
+        document.querySelector('.door-icon').addEventListener('click', function() {
+            startVideoExperience();
+        });
+        
         // Back button functionality
-        document.getElementById('videoBack').addEventListener('click', function() {
+        videoBack.addEventListener('click', function() {
             videoPlayer.pause();
             videoPlayer.currentTime = 0;
-            
             videoPlayerContainer.style.display = 'none';
             videoExperience.style.display = 'none';
         });
-
-        // 监听视频错误
-        videoPlayer.addEventListener('error', function(e) {
-            console.log("Video error:", videoPlayer.error);
-            showVideoError();
+        
+        // 视频错误处理
+        videoPlayer.addEventListener('error', function() {
+            console.error("Video error:", videoPlayer.error);
+            showError(`Video playback error: ${videoPlayer.error?.message || 'Unknown error'}`);
         });
     </script>
 </body>
 </html>
-
