@@ -445,15 +445,14 @@
                 <div>Loading video...</div>
             </div>
             
-            <!-- 视频播放器 -->
-            <video class="video-player" id="videoPlayer" controls preload="metadata">
-                <!-- 使用您的 video.mp4 文件 -->
-                <source src="video.mp4" type="video/mp4">
-                Your browser does not support the video tag.
-            </video>
-            
-            <button class="video-back" id="videoBack">BACK</button>
-        </div>
+                        <div class="video-player-container" id="videoPlayerContainer">
+                <video class="video-player" id="videoPlayer" controls preload="metadata">
+                    <!-- 使用正确的仓库路径 -->
+                    <source src="https://raw.githubusercontent.com/Lovermissing/air/master/video.mp4" type="video/mp4">
+                    Your browser does not support the video tag.
+                </video>
+                <button class="video-back" id="videoBack">BACK</button>
+            </div>
     </div>
 
     <script>
@@ -736,3 +735,4 @@
     </script>
 </body>
 </html>
+
