@@ -355,40 +355,6 @@
             transform: translateY(1px);
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
         }
-
-        /* Video controls styling */
-        .video-controls {
-            position: absolute;
-            bottom: 0;
-            left: 0;
-            right: 0;
-            background: rgba(0, 0, 0, 0.7);
-            padding: 10px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            opacity: 0;
-            transition: opacity 0.3s ease;
-        }
-
-        .video-player-container:hover .video-controls {
-            opacity: 1;
-        }
-
-        .control-btn {
-            background: none;
-            border: none;
-            color: white;
-            font-size: 1.5rem;
-            cursor: pointer;
-            padding: 5px;
-        }
-
-        .time-display {
-            color: white;
-            font-size: 1rem;
-            margin: 0 10px;
-        }
     </style>
 </head>
 <body>
@@ -443,16 +409,17 @@
         
         <div class="video-player-container" id="videoPlayerContainer">
             <video class="video-player" id="videoPlayer" controls>
-                <source src="https://raw.githubusercontent.com/lovermissing/West/master/【高燃杀球卡点】这才是男单的魅力！！！.mp4" type="video/mp4">
-                <source src="./【高燃杀球卡点】这才是男单的魅力！！！.mp4" type="video/mp4">
+                <!-- 多个视频源选项 -->
+                <!-- 选项1: GitHub LFS Raw 链接 (需要知道确切的文件ID) -->
+                <!-- 选项2: 重命名后的简单文件名 -->
+                <source src="badminton-video.mp4" type="video/mp4">
+                <!-- 选项3: 如果通过GitHub Pages部署，可以尝试这个路径 -->
+                <source src="/West/【高燃杀球卡点】这才是男单的魅力！！！.mp4" type="video/mp4">
+                <!-- 选项4: 使用外部视频托管（如果上述都不行） -->
+                <source src="https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4" type="video/mp4">
+                
                 Your browser does not support the video tag.
             </video>
-            <div class="video-controls">
-                <button class="control-btn" id="playPauseBtn">⏵</button>
-                <button class="control-btn" id="muteBtn">🔊</button>
-                <input type="range" id="volumeSlider" min="0" max="1" step="0.1" value="1" style="width: 100px;">
-                <span class="time-display" id="timeDisplay">0:00 / 0:00</span>
-            </div>
             <button class="video-back" id="videoBack">BACK</button>
         </div>
     </div>
@@ -549,59 +516,14 @@
         const msg5 = document.getElementById('message5');
         const videoPlayerContainer = document.getElementById('videoPlayerContainer');
         const videoPlayer = document.getElementById('videoPlayer');
-        const playPauseBtn = document.getElementById('playPauseBtn');
-        const muteBtn = document.getElementById('muteBtn');
-        const volumeSlider = document.getElementById('volumeSlider');
-        const timeDisplay = document.getElementById('timeDisplay');
 
         // Door icon functionality - launches video experience
         document.querySelector('.door-icon').addEventListener('click', function() {
             startVideoExperience();
         });
 
-        // Video player controls
-        videoPlayer.addEventListener('play', function() {
-            playPauseBtn.textContent = '⏸';
-        });
-
-        videoPlayer.addEventListener('pause', function() {
-            playPauseBtn.textContent = '⏵';
-        });
-
-        playPauseBtn.addEventListener('click', function() {
-            if (videoPlayer.paused) {
-                videoPlayer.play();
-            } else {
-                videoPlayer.pause();
-            }
-        });
-
-        muteBtn.addEventListener('click', function() {
-            videoPlayer.muted = !videoPlayer.muted;
-            muteBtn.textContent = videoPlayer.muted ? '🔇' : '🔊';
-        });
-
-        volumeSlider.addEventListener('input', function() {
-            videoPlayer.volume = this.value;
-        });
-
-        videoPlayer.addEventListener('timeupdate', function() {
-            const currentTime = formatTime(videoPlayer.currentTime);
-            const duration = formatTime(videoPlayer.duration);
-            timeDisplay.textContent = `${currentTime} / ${duration}`;
-        });
-
-        function formatTime(seconds) {
-            const minutes = Math.floor(seconds / 60);
-            const secs = Math.floor(seconds % 60);
-            return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
-        }
-
         function startVideoExperience() {
             videoExperience.style.display = 'flex';
-            
-            // Preload video to ensure it's ready
-            videoPlayer.load();
             
             // Sequence of messages with delays
             setTimeout(() => {
@@ -626,15 +548,11 @@
                                                     msg5.style.opacity = 0;
                                                     setTimeout(() => {
                                                         videoPlayerContainer.style.display = 'block';
-                                                        // Try to play video
-                                                        const playPromise = videoPlayer.play();
-                                                        if (playPromise !== undefined) {
-                                                            playPromise.catch(error => {
-                                                                console.log("Autoplay prevented, user interaction required");
-                                                                // Show play button overlay
-                                                                showPlayOverlay();
-                                                            });
-                                                        }
+                                                        // 添加错误处理
+                                                        videoPlayer.play().catch(error => {
+                                                            console.log("Video play error:", error);
+                                                            showVideoError();
+                                                        });
                                                     }, 1000);
                                                 }, 1000);
                                             }, 1000);
@@ -648,36 +566,45 @@
             }, 1000);
         }
 
-        function showPlayOverlay() {
-            const overlay = document.createElement('div');
-            overlay.style.position = 'absolute';
-            overlay.style.top = '0';
-            overlay.style.left = '0';
-            overlay.style.width = '100%';
-            overlay.style.height = '100%';
-            overlay.style.backgroundColor = 'rgba(0,0,0,0.7)';
-            overlay.style.display = 'flex';
-            overlay.style.justifyContent = 'center';
-            overlay.style.alignItems = 'center';
-            overlay.style.zIndex = '100';
+        function showVideoError() {
+            const errorDiv = document.createElement('div');
+            errorDiv.style.position = 'absolute';
+            errorDiv.style.top = '50%';
+            errorDiv.style.left = '50%';
+            errorDiv.style.transform = 'translate(-50%, -50%)';
+            errorDiv.style.backgroundColor = 'rgba(0,0,0,0.8)';
+            errorDiv.style.color = 'white';
+            errorDiv.style.padding = '20px';
+            errorDiv.style.borderRadius = '10px';
+            errorDiv.style.textAlign = 'center';
+            errorDiv.style.zIndex = '100';
+            errorDiv.style.maxWidth = '80%';
             
-            const playButton = document.createElement('button');
-            playButton.style.fontSize = '3rem';
-            playButton.style.backgroundColor = 'rgba(255,255,255,0.8)';
-            playButton.style.border = 'none';
-            playButton.style.borderRadius = '50%';
-            playButton.style.width = '100px';
-            playButton.style.height = '100px';
-            playButton.style.cursor = 'pointer';
-            playButton.textContent = '⏵';
+            errorDiv.innerHTML = `
+                <h3>Video Playback Issue</h3>
+                <p>This video is stored using Git LFS. Please choose an option:</p>
+                <button class="video-option" style="margin: 5px; padding: 10px; cursor: pointer;" onclick="window.open('https://github.com/lovermissing/West/blob/master/【高燃杀球卡点】这才是男单的魅力！！！.mp4', '_blank')">1. View on GitHub</button>
+                <br>
+                <button class="video-option" style="margin: 5px; padding: 10px; cursor: pointer;" onclick="useExternalVideo()">2. Use Sample Video</button>
+                <br>
+                <button class="video-option" style="margin: 5px; padding: 10px; cursor: pointer;" onclick="retryVideo()">3. Try Again</button>
+            `;
             
-            playButton.addEventListener('click', function() {
+            videoPlayerContainer.appendChild(errorDiv);
+            
+            // 定义按钮功能
+            window.useExternalVideo = function() {
+                videoPlayer.src = "https://commondatastorage.googleapis.com/gtv-videos-bucket/sample/BigBuckBunny.mp4";
+                errorDiv.remove();
+                videoPlayer.load();
                 videoPlayer.play();
-                overlay.remove();
-            });
+            };
             
-            overlay.appendChild(playButton);
-            videoPlayerContainer.appendChild(overlay);
+            window.retryVideo = function() {
+                errorDiv.remove();
+                videoPlayer.load();
+                videoPlayer.play();
+            };
         }
 
         // Back button functionality
@@ -689,19 +616,10 @@
             videoExperience.style.display = 'none';
         });
 
-        // Add click to play/pause
-        videoPlayer.addEventListener('click', function() {
-            if (videoPlayer.paused) {
-                videoPlayer.play();
-            } else {
-                videoPlayer.pause();
-            }
-        });
-
-        // Handle video loading errors
-        videoPlayer.addEventListener('error', function() {
-            console.log("Video loading error, trying alternative source...");
-            // The browser will automatically try the second source
+        // 监听视频错误
+        videoPlayer.addEventListener('error', function(e) {
+            console.log("Video error:", videoPlayer.error);
+            showVideoError();
         });
     </script>
 </body>
