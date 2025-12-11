@@ -631,6 +631,48 @@
             }
         }
 
+        // 显示播放按钮
+        function showPlayButton() {
+            const overlay = document.createElement('div');
+            overlay.style.position = 'absolute';
+            overlay.style.top = '0';
+            overlay.style.left = '0';
+            overlay.style.width = '100%';
+            overlay.style.height = '100%';
+            overlay.style.backgroundColor = 'rgba(0,0,0,0.7)';
+            overlay.style.display = 'flex';
+            overlay.style.flexDirection = 'column';
+            overlay.style.justifyContent = 'center';
+            overlay.style.alignItems = 'center';
+            overlay.style.zIndex = '150';
+            
+            const playButton = document.createElement('button');
+            playButton.innerHTML = '▶';
+            playButton.style.fontSize = '4rem';
+            playButton.style.width = '100px';
+            playButton.style.height = '100px';
+            playButton.style.borderRadius = '50%';
+            playButton.style.border = 'none';
+            playButton.style.background = 'rgba(255,255,255,0.9)';
+            playButton.style.cursor = 'pointer';
+            playButton.style.color = '#333';
+            
+            const message = document.createElement('p');
+            message.textContent = 'Click to play video';
+            message.style.color = 'white';
+            message.style.marginTop = '20px';
+            message.style.fontSize = '1.2rem';
+            
+            playButton.addEventListener('click', function() {
+                videoPlayer.play();
+                overlay.remove();
+            });
+            
+            overlay.appendChild(playButton);
+            overlay.appendChild(message);
+            videoPlayerContainer.appendChild(overlay);
+        }
+
         // 启动视频体验
         async function startVideoExperience() {
             console.log('开始视频体验...');
@@ -666,48 +708,6 @@
             }
         }
 
-        // 显示播放按钮
-        function showPlayButton() {
-            const overlay = document.createElement('div');
-            overlay.style.position = 'absolute';
-            overlay.style.top = '0';
-            overlay.style.left = '0';
-            overlay.style.width = '100%';
-            overlay.style.height = '100%';
-            overlay.style.backgroundColor = 'rgba(0,0,0,0.7)';
-            overlay.style.display = 'flex';
-            overlay.style.flexDirection = 'column';
-            overlay.style.justifyContent: 'center';
-            overlay.style.alignItems: 'center';
-            overlay.style.zIndex = '150';
-            
-            const playButton = document.createElement('button');
-            playButton.innerHTML = '▶';
-            playButton.style.fontSize = '4rem';
-            playButton.style.width = '100px';
-            playButton.style.height = '100px';
-            playButton.style.borderRadius = '50%';
-            playButton.style.border = 'none';
-            playButton.style.background = 'rgba(255,255,255,0.9)';
-            playButton.style.cursor = 'pointer';
-            playButton.style.color = '#333';
-            
-            const message = document.createElement('p');
-            message.textContent = 'Click to play video';
-            message.style.color = 'white';
-            message.style.marginTop = '20px';
-            message.style.fontSize = '1.2rem';
-            
-            playButton.addEventListener('click', function() {
-                videoPlayer.play();
-                overlay.remove();
-            });
-            
-            overlay.appendChild(playButton);
-            overlay.appendChild(message);
-            videoPlayerContainer.appendChild(overlay);
-        }
-
         // 门图标功能 - 启动视频体验
         document.querySelector('.door-icon').addEventListener('click', function() {
             startVideoExperience();
@@ -716,7 +716,7 @@
         // 返回按钮功能
         videoBack.addEventListener('click', function() {
             videoPlayer.pause();
-          videoPlayer.currentTime = 0;
+            videoPlayer.currentTime = 0;
             videoPlayerContainer.style.display = 'none';
             videoExperience.style.display = 'none';
         });
