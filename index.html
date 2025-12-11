@@ -277,8 +277,8 @@
             border: 2px solid #ddd;
         }
 
-        /* Immersive Experience Styles */
-        .immersive-experience {
+        /* Video Experience Styles */
+        .video-experience {
             position: fixed;
             top: 0;
             left: 0;
@@ -292,7 +292,7 @@
             align-items: center;
         }
 
-        .immersive-message {
+        .video-message {
             color: white;
             font-size: 3rem;
             text-align: center;
@@ -302,7 +302,7 @@
             text-shadow: 0 0 10px rgba(255, 255, 255, 0.5);
         }
 
-        .video-container {
+        .video-player-container {
             width: 90%;
             height: 90%;
             max-width: 1000px;
@@ -316,13 +316,14 @@
             border: 2px solid rgba(255, 255, 255, 0.2);
         }
 
-        .video-container iframe {
+        .video-player {
             width: 100%;
             height: 100%;
-            border: none;
+            object-fit: contain;
+            background-color: black;
         }
 
-        .immersive-back {
+        .video-back {
             position: absolute;
             bottom: 30px;
             left: 30px;
@@ -344,15 +345,49 @@
             box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
         }
 
-        .immersive-back:hover {
+        .video-back:hover {
             background: linear-gradient(135deg, #FFF, #DDD);
             transform: translateY(-3px);
             box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
         }
 
-        .immersive-back:active {
+        .video-back:active {
             transform: translateY(1px);
             box-shadow: 0 2px 10px rgba(0, 0, 0, 0.3);
+        }
+
+        /* Video controls styling */
+        .video-controls {
+            position: absolute;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: rgba(0, 0, 0, 0.7);
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .video-player-container:hover .video-controls {
+            opacity: 1;
+        }
+
+        .control-btn {
+            background: none;
+            border: none;
+            color: white;
+            font-size: 1.5rem;
+            cursor: pointer;
+            padding: 5px;
+        }
+
+        .time-display {
+            color: white;
+            font-size: 1rem;
+            margin: 0 10px;
         }
     </style>
 </head>
@@ -399,16 +434,26 @@
         <div id="bubbleContent"></div>
     </div>
 
-    <div class="immersive-experience" id="immersiveExperience">
-        <div class="immersive-message" id="message1">Are You Ready?</div>
-        <div class="immersive-message" id="message2">Let's Experience the Magic of Badminton!</div>
-        <div class="immersive-message" id="message3">3</div>
-        <div class="immersive-message" id="message4">2</div>
-        <div class="immersive-message" id="message5">1</div>
+    <div class="video-experience" id="videoExperience">
+        <div class="video-message" id="message1">Are You Ready?</div>
+        <div class="video-message" id="message2">Let's Experience the Magic of Badminton!</div>
+        <div class="video-message" id="message3">3</div>
+        <div class="video-message" id="message4">2</div>
+        <div class="video-message" id="message5">1</div>
         
-        <div class="video-container" id="videoContainer">
-            <iframe src="" id="videoFrame" allowfullscreen></iframe>
-            <button class="immersive-back" id="immersiveBack">BACK</button>
+        <div class="video-player-container" id="videoPlayerContainer">
+            <video class="video-player" id="videoPlayer" controls>
+                <source src="https://raw.githubusercontent.com/lovermissing/West/master/【高燃杀球卡点】这才是男单的魅力！！！.mp4" type="video/mp4">
+                <source src="./【高燃杀球卡点】这才是男单的魅力！！！.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <div class="video-controls">
+                <button class="control-btn" id="playPauseBtn">⏵</button>
+                <button class="control-btn" id="muteBtn">🔊</button>
+                <input type="range" id="volumeSlider" min="0" max="1" step="0.1" value="1" style="width: 100px;">
+                <span class="time-display" id="timeDisplay">0:00 / 0:00</span>
+            </div>
+            <button class="video-back" id="videoBack">BACK</button>
         </div>
     </div>
 
@@ -495,22 +540,68 @@
             document.getElementById('infoBubble').style.display = 'none';
         });
 
-        // Door icon functionality - launches immersive experience
+        // Video Experience Functions
+        const videoExperience = document.getElementById('videoExperience');
+        const msg1 = document.getElementById('message1');
+        const msg2 = document.getElementById('message2');
+        const msg3 = document.getElementById('message3');
+        const msg4 = document.getElementById('message4');
+        const msg5 = document.getElementById('message5');
+        const videoPlayerContainer = document.getElementById('videoPlayerContainer');
+        const videoPlayer = document.getElementById('videoPlayer');
+        const playPauseBtn = document.getElementById('playPauseBtn');
+        const muteBtn = document.getElementById('muteBtn');
+        const volumeSlider = document.getElementById('volumeSlider');
+        const timeDisplay = document.getElementById('timeDisplay');
+
+        // Door icon functionality - launches video experience
         document.querySelector('.door-icon').addEventListener('click', function() {
-            startImmersiveExperience();
+            startVideoExperience();
         });
 
-        // Immersive Experience Functions
-        function startImmersiveExperience() {
-            const experience = document.getElementById('immersiveExperience');
-            const msg1 = document.getElementById('message1');
-            const msg2 = document.getElementById('message2');
-            const msg3 = document.getElementById('message3');
-            const msg4 = document.getElementById('message4');
-            const msg5 = document.getElementById('message5');
-            const videoContainer = document.getElementById('videoContainer');
+        // Video player controls
+        videoPlayer.addEventListener('play', function() {
+            playPauseBtn.textContent = '⏸';
+        });
+
+        videoPlayer.addEventListener('pause', function() {
+            playPauseBtn.textContent = '⏵';
+        });
+
+        playPauseBtn.addEventListener('click', function() {
+            if (videoPlayer.paused) {
+                videoPlayer.play();
+            } else {
+                videoPlayer.pause();
+            }
+        });
+
+        muteBtn.addEventListener('click', function() {
+            videoPlayer.muted = !videoPlayer.muted;
+            muteBtn.textContent = videoPlayer.muted ? '🔇' : '🔊';
+        });
+
+        volumeSlider.addEventListener('input', function() {
+            videoPlayer.volume = this.value;
+        });
+
+        videoPlayer.addEventListener('timeupdate', function() {
+            const currentTime = formatTime(videoPlayer.currentTime);
+            const duration = formatTime(videoPlayer.duration);
+            timeDisplay.textContent = `${currentTime} / ${duration}`;
+        });
+
+        function formatTime(seconds) {
+            const minutes = Math.floor(seconds / 60);
+            const secs = Math.floor(seconds % 60);
+            return `${minutes}:${secs < 10 ? '0' : ''}${secs}`;
+        }
+
+        function startVideoExperience() {
+            videoExperience.style.display = 'flex';
             
-            experience.style.display = 'flex';
+            // Preload video to ensure it's ready
+            videoPlayer.load();
             
             // Sequence of messages with delays
             setTimeout(() => {
@@ -534,14 +625,16 @@
                                                 setTimeout(() => {
                                                     msg5.style.opacity = 0;
                                                     setTimeout(() => {
-                                                        videoContainer.style.display = 'block';
-                                                        document.getElementById('videoFrame').src = 'https://www.bilibili.com/video/BV1SP411u76s?spm_id_from=333.788.recommend_more_video.0&vd_source=9f2e7f7c520e5461bf6db8ad014f9c0e';
-                                                        
-                                                        // Ensure iframe fills container
-                                                        const iframe = document.getElementById('videoFrame');
-                                                        iframe.style.width = '100%';
-                                                        iframe.style.height = '100%';
-                                                        iframe.style.border = 'none';
+                                                        videoPlayerContainer.style.display = 'block';
+                                                        // Try to play video
+                                                        const playPromise = videoPlayer.play();
+                                                        if (playPromise !== undefined) {
+                                                            playPromise.catch(error => {
+                                                                console.log("Autoplay prevented, user interaction required");
+                                                                // Show play button overlay
+                                                                showPlayOverlay();
+                                                            });
+                                                        }
                                                     }, 1000);
                                                 }, 1000);
                                             }, 1000);
@@ -555,14 +648,60 @@
             }, 1000);
         }
 
-        // Back button functionality
-        document.getElementById('immersiveBack').addEventListener('click', function() {
-            const experience = document.getElementById('immersiveExperience');
-            const videoContainer = document.getElementById('videoContainer');
+        function showPlayOverlay() {
+            const overlay = document.createElement('div');
+            overlay.style.position = 'absolute';
+            overlay.style.top = '0';
+            overlay.style.left = '0';
+            overlay.style.width = '100%';
+            overlay.style.height = '100%';
+            overlay.style.backgroundColor = 'rgba(0,0,0,0.7)';
+            overlay.style.display = 'flex';
+            overlay.style.justifyContent = 'center';
+            overlay.style.alignItems = 'center';
+            overlay.style.zIndex = '100';
             
-            videoContainer.style.display = 'none';
-            document.getElementById('videoFrame').src = '';
-            experience.style.display = 'none';
+            const playButton = document.createElement('button');
+            playButton.style.fontSize = '3rem';
+            playButton.style.backgroundColor = 'rgba(255,255,255,0.8)';
+            playButton.style.border = 'none';
+            playButton.style.borderRadius = '50%';
+            playButton.style.width = '100px';
+            playButton.style.height = '100px';
+            playButton.style.cursor = 'pointer';
+            playButton.textContent = '⏵';
+            
+            playButton.addEventListener('click', function() {
+                videoPlayer.play();
+                overlay.remove();
+            });
+            
+            overlay.appendChild(playButton);
+            videoPlayerContainer.appendChild(overlay);
+        }
+
+        // Back button functionality
+        document.getElementById('videoBack').addEventListener('click', function() {
+            videoPlayer.pause();
+            videoPlayer.currentTime = 0;
+            
+            videoPlayerContainer.style.display = 'none';
+            videoExperience.style.display = 'none';
+        });
+
+        // Add click to play/pause
+        videoPlayer.addEventListener('click', function() {
+            if (videoPlayer.paused) {
+                videoPlayer.play();
+            } else {
+                videoPlayer.pause();
+            }
+        });
+
+        // Handle video loading errors
+        videoPlayer.addEventListener('error', function() {
+            console.log("Video loading error, trying alternative source...");
+            // The browser will automatically try the second source
         });
     </script>
 </body>
