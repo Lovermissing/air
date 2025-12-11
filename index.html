@@ -363,8 +363,8 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.8);
-            display: flex;
+            background: rgba(0, 0, 0, 0.9);
+            display: none;
             flex-direction: column;
             justify-content: center;
             align-items: center;
@@ -386,6 +386,11 @@
             0% { transform: rotate(0deg); }
             100% { transform: rotate(360deg); }
         }
+
+        .loading-text {
+            color: white;
+            font-size: 1.2rem;
+        }
     </style>
 </head>
 <body>
@@ -400,7 +405,7 @@
     </div>
     
     <div class="trophy-icon icon">
-        <img src="images/奖杯1.jpg" alt="Trophy Icon">
+        
     </div>
     
     <div class="door-icon icon">
@@ -415,13 +420,13 @@
         <button class="close-case" id="closeCase">X</button>
         <div class="trophy-container">
             <div class="trophy" id="trophy1">
-                <img src="images/奖杯1.jpg" alt="USTC Trophy">
+                
             </div>
             <div class="trophy" id="trophy2">
-                <img src="images/奖杯2.jpg" alt="Badminton Trophy">
+                
             </div>
             <div class="trophy" id="trophy3">
-                <img src="images/奖杯3.jpg" alt="Volleyball Trophy">
+                
             </div>
         </div>
     </div>
@@ -440,23 +445,24 @@
         
         <div class="video-player-container" id="videoPlayerContainer">
             <!-- 加载动画 -->
-            <div class="video-loading" id="videoLoading" style="display: none;">
+            <div class="video-loading" id="videoLoading">
                 <div class="loading-spinner"></div>
-                <div>Loading video...</div>
+                <div class="loading-text" id="loadingText">Loading video...</div>
             </div>
             
-                        <div class="video-player-container" id="videoPlayerContainer">
-                <video class="video-player" id="videoPlayer" controls preload="metadata">
-                    <!-- 使用正确的仓库路径 -->
-                    <source src="https://raw.githubusercontent.com/Lovermissing/air/master/video.mp4" type="video/mp4">
-                    Your browser does not support the video tag.
-                </video>
-                <button class="video-back" id="videoBack">BACK</button>
-            </div>
+            <!-- 视频播放器 - 使用正确的视频URL -->
+            <video class="video-player" id="videoPlayer" controls preload="metadata">
+                <!-- 关键修改：使用您air仓库的正确路径 -->
+                <source src="https://raw.githubusercontent.com/Lovermissing/air/master/video.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            
+            <button class="video-back" id="videoBack">BACK</button>
+        </div>
     </div>
 
     <script>
-        // Create floating white dots
+        // 创建浮动白点
         const whiteDotsContainer = document.getElementById('whiteDots');
         for (let i = 0; i < 30; i++) {
             const dot = document.createElement('div');
@@ -467,22 +473,22 @@
             whiteDotsContainer.appendChild(dot);
         }
 
-        // Back arrow functionality
+        // 返回箭头功能
         document.querySelector('.back-arrow').addEventListener('click', function() {
             window.location.href = 'https://lovermissing.github.io/West/';
         });
 
-        // Trophy icon functionality
+        // 奖杯图标功能
         document.querySelector('.trophy-icon').addEventListener('click', function() {
             document.getElementById('displayCase').style.display = 'flex';
         });
 
-        // Close display case
+        // 关闭展示柜
         document.getElementById('closeCase').addEventListener('click', function() {
             document.getElementById('displayCase').style.display = 'none';
         });
 
-        // Trophy click functionality
+        // 奖杯点击功能
         document.getElementById('trophy1').addEventListener('click', function() {
             const bubble = document.getElementById('infoBubble');
             bubble.style.backgroundImage = 'url("images/ustc.jpg")';
@@ -533,12 +539,12 @@
             document.getElementById('infoBubble').style.display = 'block';
         });
 
-        // Close info bubble
+        // 关闭信息气泡
         document.getElementById('closeBubble').addEventListener('click', function() {
             document.getElementById('infoBubble').style.display = 'none';
         });
 
-        // Video Experience Functions
+        // 视频体验功能
         const videoExperience = document.getElementById('videoExperience');
         const msg1 = document.getElementById('message1');
         const msg2 = document.getElementById('message2');
@@ -548,67 +554,116 @@
         const videoPlayerContainer = document.getElementById('videoPlayerContainer');
         const videoPlayer = document.getElementById('videoPlayer');
         const videoLoading = document.getElementById('videoLoading');
+        const loadingText = document.getElementById('loadingText');
         const videoBack = document.getElementById('videoBack');
 
         // 显示加载动画
-        function showLoading() {
+        function showLoading(text) {
             videoLoading.style.display = 'flex';
+            loadingText.textContent = text;
         }
-
+        
         // 隐藏加载动画
         function hideLoading() {
             videoLoading.style.display = 'none';
         }
-
-        // 检查视频是否可访问
-        async function checkVideoAvailability() {
-            return new Promise((resolve) => {
-                const xhr = new XMLHttpRequest();
-                xhr.open('HEAD', 'video.mp4');
-                xhr.onload = function() {
-                    resolve(xhr.status === 200);
-                };
-                xhr.onerror = function() {
-                    resolve(false);
-                };
-                xhr.timeout = 10000;
-                xhr.ontimeout = function() {
-                    resolve(false);
-                };
-                xhr.send();
-            });
+        
+        // 检查视频是否存在
+        async function checkVideoExists() {
+            const videoUrl = 'https://raw.githubusercontent.com/Lovermissing/air/master/video.mp4';
+            
+            try {
+                const response = await fetch(videoUrl, { method: 'HEAD' });
+                if (response.ok) {
+                    console.log('视频存在，状态码:', response.status);
+                    return true;
+                } else {
+                    console.log('视频不存在，状态码:', response.status);
+                    return false;
+                }
+            } catch (error) {
+                console.log('视频检查失败:', error);
+                return false;
+            }
         }
 
-        // 显示错误信息
-        function showError(message) {
-            const errorDiv = document.createElement('div');
-            errorDiv.style.position = 'absolute';
-            errorDiv.style.top = '0';
-            errorDiv.style.left = '0';
-            errorDiv.style.width = '100%';
-            errorDiv.style.height = '100%';
-            errorDiv.style.backgroundColor = 'rgba(0,0,0,0.9)';
-            errorDiv.style.color = 'white';
-            errorDiv.style.display = 'flex';
-            errorDiv.style.flexDirection = 'column';
-            errorDiv.style.justifyContent = 'center';
-            errorDiv.style.alignItems = 'center';
-            errorDiv.style.padding = '20px';
-            errorDiv.style.textAlign = 'center';
-            errorDiv.style.zIndex = '100';
+        // 加载并播放视频
+        async function loadAndPlayVideo() {
+            const videoUrl = 'https://raw.githubusercontent.com/Lovermissing/air/master/video.mp4';
             
-            errorDiv.innerHTML = `
-                <h3>❌ Video Error</h3>
-                <p>${message}</p>
-                <div style="margin-top: 20px;">
-                    <button onclick="location.reload()" 
-                            style="padding: 10px 20px; margin: 5px; background: #3498db; color: white; border: none; border-radius: 5px; cursor: pointer;">
-                        Refresh Page
-                    </button>
-                </div>
-            `;
+            showLoading('检查视频文件...');
             
-            videoPlayerContainer.appendChild(errorDiv);
+            // 先检查视频是否存在
+            const videoExists = await checkVideoExists();
+            
+            if (!videoExists) {
+                hideLoading();
+                alert('视频文件未找到！请确保 video.mp4 已上传到您的 air 仓库。');
+                return false;
+            }
+            
+            showLoading('加载视频中...');
+            
+            try {
+                // 设置视频源
+                videoPlayer.src = videoUrl;
+                // 重新加载视频
+                videoPlayer.load();
+                
+                // 等待视频加载
+                await new Promise((resolve, reject) => {
+                    videoPlayer.onloadeddata = resolve;
+                    videoPlayer.onerror = reject;
+                    
+                    // 设置超时
+                    setTimeout(() => reject(new Error('视频加载超时')), 30000);
+                });
+                
+                hideLoading();
+                console.log('视频加载成功');
+                return true;
+                
+            } catch (error) {
+                hideLoading();
+                console.error('视频加载失败:', error);
+                alert('视频加载失败: ' + error.message);
+                return false;
+            }
+        }
+
+        // 启动视频体验
+        async function startVideoExperience() {
+            console.log('开始视频体验...');
+            
+            // 显示视频体验界面
+            videoExperience.style.display = 'flex';
+            
+            // 倒计时序列
+            const messages = [msg1, msg2, msg3, msg4, msg5];
+            
+            for (let i = 0; i < messages.length; i++) {
+                messages[i].style.opacity = 1;
+                await new Promise(resolve => setTimeout(resolve, 1000));
+                messages[i].style.opacity = 0;
+            }
+            
+            // 显示视频播放器容器
+            videoPlayerContainer.style.display = 'block';
+            
+            // 加载并播放视频
+            const success = await loadAndPlayVideo();
+            
+            if (success) {
+                try {
+                    // 尝试自动播放
+                    await videoPlayer.play();
+                    console.log('视频自动播放成功');
+                } catch (error) {
+                    console.log('自动播放被阻止，需要用户点击播放');
+                    // 显示播放按钮
+                    showPlayButton();
+                }
+            }
         }
 
         // 显示播放按钮
@@ -622,8 +677,8 @@
             overlay.style.backgroundColor = 'rgba(0,0,0,0.7)';
             overlay.style.display = 'flex';
             overlay.style.flexDirection = 'column';
-            overlay.style.justifyContent = 'center';
-            overlay.style.alignItems = 'center';
+            overlay.style.justifyContent: 'center';
+            overlay.style.alignItems: 'center';
             overlay.style.zIndex = '150';
             
             const playButton = document.createElement('button');
@@ -638,7 +693,7 @@
             playButton.style.color = '#333';
             
             const message = document.createElement('p');
-            message.textContent = 'Click to play';
+            message.textContent = 'Click to play video';
             message.style.color = 'white';
             message.style.marginTop = '20px';
             message.style.fontSize = '1.2rem';
@@ -653,78 +708,71 @@
             videoPlayerContainer.appendChild(overlay);
         }
 
-        // 修改启动视频体验的函数
-        async function startVideoExperience() {
-            // 显示视频体验界面
-            videoExperience.style.display = 'flex';
-            
-            // 倒计时消息序列
-            const messages = [msg1, msg2, msg3, msg4, msg5];
-            
-            for (let i = 0; i < messages.length; i++) {
-                messages[i].style.opacity = 1;
-                await new Promise(resolve => setTimeout(resolve, 1000));
-                messages[i].style.opacity = 0;
-            }
-            
-            // 显示视频播放器容器
-            videoPlayerContainer.style.display = 'block';
-            showLoading();
-            
-            // 检查视频是否可访问
-            const isVideoAvailable = await checkVideoAvailability();
-            
-            if (!isVideoAvailable) {
-                hideLoading();
-                showError('Video file not found. Please check if video.mp4 exists in the repository.');
-                return;
-            }
-            
-            // 预加载视频
-            videoPlayer.load();
-            
-            // 设置事件监听器
-            videoPlayer.addEventListener('loadeddata', function() {
-                hideLoading();
-                console.log('Video loaded successfully');
-                
-                // 尝试自动播放
-                videoPlayer.play().then(() => {
-                    console.log('Video autoplay started');
-                }).catch(error => {
-                    console.log('Autoplay prevented, showing play button');
-                    showPlayButton();
-                });
-            });
-            
-            videoPlayer.addEventListener('error', function() {
-                hideLoading();
-                showError(`Video playback error: ${videoPlayer.error?.message || 'Unknown error'}`);
-            });
-            
-            // 设置超时
-            setTimeout(() => {
-                if (videoPlayer.readyState < 2) { // 如果还没开始加载
-                    hideLoading();
-                    showError('Video loading timeout. The file might be too large or network is slow.');
-                }
-            }, 30000); // 30秒超时
-        }
-
-        // Door icon functionality
+        // 门图标功能 - 启动视频体验
         document.querySelector('.door-icon').addEventListener('click', function() {
             startVideoExperience();
         });
-        
-        // Back button functionality
+
+        // 返回按钮功能
         videoBack.addEventListener('click', function() {
             videoPlayer.pause();
-            videoPlayer.currentTime = 0;
+          videoPlayer.currentTime = 0;
             videoPlayerContainer.style.display = 'none';
             videoExperience.style.display = 'none';
         });
-        
-        // 添加点击视频暂停/播放功能
+
+        // 视频错误处理
+        videoPlayer.addEventListener('error', function(e) {
+            console.error('Video error:', videoPlayer.error);
+            hideLoading();
+            
+            let errorMessage = '视频播放错误: ';
+            switch(videoPlayer.error.code) {
+                case 1:
+                    errorMessage += '视频加载被中止';
+                    break;
+                case 2:
+                    errorMessage += '网络错误';
+                    break;
+                case 3:
+                    errorMessage += '视频解码错误';
+                    break;
+                case 4:
+                    errorMessage += '视频格式不支持';
+                    break;
+                default:
+                    errorMessage += '未知错误';
+            }
+            
+            alert(errorMessage);
+        });
+
+        // 视频加载进度处理
+        videoPlayer.addEventListener('progress', function() {
+            if (videoPlayer.buffered.length > 0) {
+                const bufferedEnd = videoPlayer.buffered.end(videoPlayer.buffered.length - 1);
+                const duration = videoPlayer.duration;
+                if (duration > 0) {
+                    const percent = (bufferedEnd / duration) * 100;
+                    loadingText.textContent = `Loading video... ${percent.toFixed(1)}%`;
+                }
+            }
+        });
+
+        // 页面加载时预检查视频
+        window.addEventListener('DOMContentLoaded', async function() {
+            console.log('页面加载完成，预检查视频...');
+            
+            // 检查视频是否存在
+            const videoExists = await checkVideoExists();
+            if (videoExists) {
+                console.log('✓ 视频文件已确认存在');
+            } else {
+                console.log('✗ 视频文件不存在，请上传到仓库');
+            }
+        });
+
+        // 点击视频暂停/播放
         videoPlayer.addEventListener('click', function() {
             if (videoPlayer.paused) {
                 videoPlayer.play();
@@ -732,7 +780,52 @@
                 videoPlayer.pause();
             }
         });
+
+        // 键盘快捷键支持
+        document.addEventListener('keydown', function(e) {
+            if (videoPlayerContainer.style.display === 'block') {
+                switch(e.code) {
+                    case 'Space':
+                        e.preventDefault();
+                        if (videoPlayer.paused) {
+                            videoPlayer.play();
+                        } else {
+                            videoPlayer.pause();
+                        }
+                        break;
+                    case 'Escape':
+                        videoBack.click();
+                        break;
+                    case 'ArrowRight':
+                        videoPlayer.currentTime += 10;
+                        break;
+                    case 'ArrowLeft':
+                        videoPlayer.currentTime -= 10;
+                        break;
+                }
+            }
+        });
+
+        // 添加视频控制条样式增强
+        const style = document.createElement('style');
+        style.textContent = `
+            /* 自定义视频控制条样式 */
+            .video-player::-webkit-media-controls-panel {
+                background: linear-gradient(transparent, rgba(0,0,0,0.7));
+            }
+            .video-player::-webkit-media-controls-play-button {
+                background-color: rgba(255,255,255,0.8);
+                border-radius: 50%;
+            }
+            .video-player::-webkit-media-controls-current-time-display,
+            .video-player::-webkit-media-controls-time-remaining-display {
+                color: white;
+                text-shadow: 0 0 2px black;
+            }
+        `;
+        document.head.appendChild(style);
+
+        console.log('视频播放器初始化完成');
     </script>
 </body>
 </html>
-
